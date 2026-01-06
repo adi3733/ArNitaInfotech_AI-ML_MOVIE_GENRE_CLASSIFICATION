@@ -1,0 +1,18 @@
+# Local environments
+backend/venv/
+.venv/
+venv/
+
+# Training / data artifacts not needed at runtime
+movie_genre_model.ipynb
+test_data_solution.csv
+test_data_solution.txt
+model_info.txt
+
+# Original training model formats (runtime uses backend/model/runtime/*)
+backend/model/*.pkl
+backend/model/*.h5
+
+# Python caches
+**/__pycache__/
+**/*.pyc

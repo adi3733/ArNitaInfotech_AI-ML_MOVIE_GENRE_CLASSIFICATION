@@ -73,6 +73,13 @@ Ensure you have Python installed, then run:
 pip install -r requirements.txt
 ```
 
+Note: `requirements.txt` is intentionally kept lightweight for Vercel deployment.
+
+If you want to re-train the model / run the notebook, install the training dependencies instead:
+```bash
+pip install -r requirements-train.txt
+```
+
 ### **3. Run the Backend Server**
 Navigate to the backend directory and start the FastAPI server:
 ```bash
@@ -80,6 +87,11 @@ cd backend
 python app.py
 ```
 *The server will start at `http://127.0.0.1:8000`*
+
+If you ever regenerate `backend/model/*.pkl`, also regenerate the Vercel-friendly runtime artifacts:
+```bash
+python backend/tools/export_runtime_artifacts.py
+```
 
 ### **4. Launch the Frontend**
 Simply open the `frontend/index.html` file in your preferred web browser.

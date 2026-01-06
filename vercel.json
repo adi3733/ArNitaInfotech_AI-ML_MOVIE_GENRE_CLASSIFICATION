@@ -5,8 +5,8 @@
             "use": "@vercel/python",
             "config": {
                 "includeFiles": [
-                    "model/**",
-                    "../frontend/**"
+                    "backend/model/**",
+                    "frontend/**"
                 ]
             }
         }

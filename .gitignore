@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.env
+.venv/
+
+# Environment Variables
+.env
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# IDEs
+.vscode/
+.idea/
+
+# Large files/folders if necessary (user's specific folders)
+# backend/model/ (Uncomment if you don't want to push models, but user probably wants them)
+# backend/venv/ (Already covered by venv/)

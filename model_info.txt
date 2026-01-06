@@ -1,0 +1,5 @@
+Movie Genre Classification Model
+Algorithm: Logistic Regression
+Features: TF-IDF (unigram + bigram)
+Number of classes: 27
+Classes: ['action', 'adult', 'adventure', 'animation', 'biography', 'comedy', 'crime', 'documentary', 'drama', 'family', 'fantasy', 'game-show', 'history', 'horror', 'music', 'musical', 'mystery', 'news', 'reality-tv', 'romance', 'sci-fi', 'short', 'sport', 'talk-show', 'thriller', 'war', 'western']

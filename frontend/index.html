@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CineSense AI | Movie Genre Prediction</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white min-h-screen">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent px-4 py-3">
+        <a class="navbar-brand fw-bold text-xl" href="#">
+            🎬 CineSense <span class="text-purple-400">AI</span>
+        </a>
+        <div class="ms-auto">
+            <a href="#predict" class="btn btn-outline-light btn-sm">Try Now</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="container text-center py-5">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+            AI-Powered Movie Genre Prediction
+        </h1>
+        <p class="text-gray-300 max-w-2xl mx-auto mb-5">
+            Predict movie genres instantly from plot summaries using
+            <span class="text-purple-400 font-semibold">Natural Language Processing</span>
+            and Machine Learning.
+        </p>
+
+        <a href="#predict" class="btn btn-lg btn-primary px-5 py-3 shadow-lg">
+            🔮 Try Prediction
+        </a>
+    </section>
+
+    <!-- PREDICTION CARD -->
+    <section id="predict" class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <div class="bg-white/10 backdrop-blur-md rounded-4 shadow-lg p-4 p-md-5">
+
+                    <h2 class="text-2xl font-semibold mb-3">
+                        🎭 Predict Movie Genre
+                    </h2>
+
+                    <p class="text-gray-300 mb-4">
+                        Enter a movie plot summary below and let AI predict the genre.
+                    </p>
+
+                    <!-- TEXTAREA -->
+                    <textarea id="plotInput" class="form-control mb-3 bg-dark text-white border-secondary" rows="6"
+                        placeholder="Example: A young boy discovers magical powers and must save the world from dark forces..."></textarea>
+
+                    <div class="d-grid">
+                        <button id="predictBtn" class="btn btn-lg btn-success">
+                            🚀 Predict Genre
+                        </button>
+                    </div>
+
+                    <!-- RESULT PLACEHOLDER -->
+                    <div id="results" class="mt-5 hidden"></div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-4 text-gray-400">
+        <p>
+            © 2026 CineSense AI • Built by <span class="text-purple-400">Adiii</span>
+        </p>
+    </footer>
+
+
+    <script>
+        const predictBtn = document.getElementById("predictBtn");
+        const plotInput = document.getElementById("plotInput");
+        const resultsDiv = document.getElementById("results");
+
+        predictBtn.addEventListener("click", async () => {
+            const plotText = plotInput.value.trim();
+
+            if (plotText.length < 20) {
+                alert("Please enter at least 20 characters.");
+                return;
+            }
+
+            // UI: loading state
+            predictBtn.disabled = true;
+            predictBtn.innerText = "⏳ Predicting...";
+            resultsDiv.classList.add("hidden");
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/predict", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ plot: plotText })
+                });
+
+                const data = await response.json();
+
+                // Clear old results
+                resultsDiv.innerHTML = "";
+                resultsDiv.classList.remove("hidden");
+
+                const topResult = data.top_predictions[0];
+                const otherResults = data.top_predictions.slice(1);
+
+                // Calculate degrees for the conic gradient (0 to 360)
+                const degrees = Math.round(topResult.confidence * 360);
+                const percent = Math.round(topResult.confidence * 100);
+
+                let html = `
+                    <div class="flex flex-col items-center animate-[fadeIn_0.5s_ease-out]">
+                        
+                        <!-- 1. ORBITAL GAUGE (Top Result) -->
+                        <div class="relative w-56 h-56 mb-6 group cursor-default transition-transform duration-500 hover:scale-105">
+                            
+                            <!-- Outer Glow Pulse -->
+                            <div class="absolute -inset-4 bg-purple-600/30 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition duration-700"></div>
+                            
+                            <!-- Rotating Rings -->
+                            <div class="absolute inset-0 rounded-full border border-purple-500/20 border-dashed animate-[spin_20s_linear_infinite]"></div>
+                            <div class="absolute inset-4 rounded-full border border-pink-500/20 border-dotted animate-[spin_15s_linear_infinite_reverse]"></div>
+
+                            <!-- Conic Progress Ring -->
+                            <div class="absolute inset-0 rounded-full"
+                                 style="background: conic-gradient(from 180deg, #a855f7 ${degrees}deg, #1e293b 0deg); mask: radial-gradient(transparent 60%, black 61%); -webkit-mask: radial-gradient(transparent 60%, black 61%); transform: rotate(180deg);">
+                            </div>
+
+                            <!-- Center Content -->
+                            <div class="absolute inset-0 flex flex-col items-center justify-center text-center z-10">
+                                <span class="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase mb-1">Detected</span>
+                                <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-purple-200 drop-shadow-lg">
+                                    ${topResult.genre}
+                                </h1>
+                                <div class="flex items-baseline gap-1 mt-1">
+                                    <span class="text-4xl font-bold text-purple-400">${percent}</span>
+                                    <span class="text-sm text-purple-400/70">%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. OTHER RESULTS LIST -->
+                        <div class="w-full space-y-3">
+                `;
+
+                otherResults.forEach((item, index) => {
+                    const p = Math.round(item.confidence * 100);
+                    // Generate a unique ID for the mini-bar
+                    const barId = `hud-bar-${index}`;
+
+                    html += `
+                        <div class="relative h-10 w-full bg-slate-800/50 rounded-lg overflow-hidden border border-white/5 flex items-center px-4 group hover:bg-slate-800/80 transition-colors">
+                            <!-- Background Bar filling up -->
+                            <div id="${barId}" class="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-purple-900/40 to-blue-900/40 border-r border-purple-500/50 transition-all duration-1000 ease-out"
+                                 style="width: 0%">
+                            </div>
+                            
+                            <!-- Text Content (on top) -->
+                            <div class="relative z-10 flex justify-between w-full">
+                                <span class="text-sm font-semibold text-gray-300 group-hover:text-white transition-colors">${item.genre}</span>
+                                <span class="text-sm font-mono text-purple-300">${p}%</span>
+                            </div>
+                        </div>
+                    `;
+
+                    // Add timeout to animate width
+                    setTimeout(() => {
+                        const bar = document.getElementById(barId);
+                        if (bar) bar.style.width = `${p}%`;
+                    }, 300 + (index * 100));
+                });
+
+                html += `</div></div>`;
+
+                resultsDiv.innerHTML = html;
+
+            } catch (error) {
+                alert("❌ Error connecting to server");
+                console.error(error);
+            }
+
+            // Reset button
+            predictBtn.disabled = false;
+            predictBtn.innerText = "🚀 Predict Genre";
+        });
+    </script>
+
+</body>
+
+</html>
